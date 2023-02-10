@@ -1,0 +1,2 @@
+#!/bin/bash
+find . -type f -maxdepth 1 -user guillame -name "hello" -exec chown betty {} +
