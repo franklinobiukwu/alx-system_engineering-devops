@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Bash script that send kill 9 (KILL) to all processes
+
+kill -15 -1
