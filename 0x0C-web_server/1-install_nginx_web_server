@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Script that installs NGINX on remote server listening to port 80
+#
+# REQUIREMENTS
+#   Install nginx on your web-01
+#   server
+#   Nginx should be listening on port 80
+#   When querying Nginx at its root / with a 
+#       GET request (requesting a page) using curl,
+#       it must return a page that contains the string Hello World!
+#   As an answer file, write a Bash script that configures a new
+#       Ubuntu machine to respect above requirements
+#       (this script will be run on the server itself)
+#   You can’t use systemctl for restarting nginx
+
+
+# Update package list
+sudo apt-get update -y
+
+# Upgrade pakages
+sudo apt-get upgrade -y
+
+# Install nginx
+sudo apt-get install nginx -y
+
+# Install firewall
+sudo apt-get install ufw
+
+# Enable NGINX http profile
+sudo ufw allow 'Nginx HTTP'
+
+# Reassign ownership of the web directories to normal user account
+sudo chown -R "$USER":"$USER" /var/www/
+
+# Write "Hello World!"
+echo "Hello World!" > /var/www/html/index.html
+
+# Start NGINX server
+sudo service nginx start
