@@ -31,14 +31,16 @@ sudo chown -R "$USER":"$USER" /var/www/
 echo "Ceci n'est pas une page" > /var/www/html/404.html
 
 # Configure NGINX to respond to 404 error
+sudo sed -i "s#try_files \$uri \$uri/ =404;#try_files \$uri \$uri/#"
+
 err="server_name _; \n\n\terror_page 404 /404.html;\n\n\tlocation = /404.html {\n\t\troot /var/www/html;\n\t\tinternal;\n\t}"
 
-sed -i "s#server_name _;#$err#" /etc/nginx/sites-available/default 
+sudo sed -i "s#server_name _;#$err#" /etc/nginx/sites-available/default 
 
 # Configure NGINX to respond to /redirect_me
 conf="server_name _; \n\n\tlocation /redirect_me { \n\t\treturn 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n\t }"
 
-sed -i "s#server_name _;#$conf#" /etc/nginx/sites-available/default
+sudo sed -i "s#server_name _;#$conf#" /etc/nginx/sites-available/default
 
 
 # Start NGINX server
