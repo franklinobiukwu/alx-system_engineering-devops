@@ -44,8 +44,6 @@ err="server_name _; \n\n\terror_page 404 /404.html;\n\n\tlocation = /404.html {\
 sudo sed -i "s#server_name _;#$err#" /etc/nginx/sites-available/default 
 
 
-# Test NGIN X config files
-sudo nginx -t
 # Start NGINX server
 sudo service nginx start
 # Reload NGINX
