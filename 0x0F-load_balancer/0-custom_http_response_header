@@ -21,6 +21,14 @@ install_software() {
     fi
 }
 
+create_path () {
+    if [[ ! -d "$1" ]]; then
+        mkdir -p "$1"
+        echo "Directory $1 created successfully"
+    else
+        echo "Direcroty $1 already exists"
+    fi
+}
 
 # Install nginx if not installed
 install_software "nginx"
@@ -32,6 +40,9 @@ sudo ufw allow 'Nginx http'
 
 # Reassign ownership of the web directories to normal user account
 sudo chown -R "$USER":"$USER" /var/www/
+
+# Change the index page content
+echo "Hello World!" > /var/www/html/index.html
 
 # Configure nginx to respond to /redirect_me
 conf="server_name _;\n\n\tlocation /redirect_me {\n\t\treturn 301  https://www.youtube.com/watch?v=QH2-TGUlwu4;\n\t}"
