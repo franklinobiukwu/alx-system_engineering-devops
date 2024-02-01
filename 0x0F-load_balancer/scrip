@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-test="This is a text $(hostname)"
-echo "$test"
