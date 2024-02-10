@@ -1,19 +1,16 @@
 # Script that installs and configures nginx
 
-exec{'update':
-        provider=>shell,
-        command => 'apt-get update'
+package{'nginx':
+        ensure => 'present',
+        require=> Apt::Update['all'],
 }
--> package{'nginx':
-        ensure=>'present'
-}
-
--> file_line{'add_header':
+file_line{'add_header':
         path=>'/etc/nginx/nginx.conf',
         match=>'http {',
-        line=>"http {\n\nadd_header X-Served-By \"${hostname}\""
+        line=>"http {\n\nadd_header X-Served-By \"$::hostname\"",
+        require => Package['nginx'],
 }
--> exec{'restart':
-    provider=>shell,
-    command=>'service nginx restart'
+service{'nginx':
+    ensure => 'restarted',
+    require => File_Line['add_header']
 }
