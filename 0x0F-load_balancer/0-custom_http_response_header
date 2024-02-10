@@ -42,22 +42,22 @@ sudo ufw allow 'Nginx http'
 sudo chown -R "$USER":"$USER" /var/www/
 
 # Change the index page content
-echo "Hello World!" > /var/www/html/index.html
+echo "Hello World!" | sudo tee /var/www/html/index.html &> /dev/null
 
 # Configure nginx to respond to /redirect_me
 conf="server_name _;\n\n\tlocation /redirect_me {\n\t\treturn 301  https://www.youtube.com/watch?v=QH2-TGUlwu4;\n\t}"
 sudo sed -i "s#server_name _;#$conf#" /etc/nginx/sites-available/default
 
 # Create custom server 404 page
-echo "Ceci n'est pas une page" > /var/www/html/404.html
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
 # Configure nginx to respond to 404 error
 err="server_name _;\n\n\terror_page 404 /404.html;\n\n\tlocation = /404.html {\n\t\troot /var/www/html;\n\t\tinternal;\n\t}"
 sudo sed -i "s#server_name _;#$err#" /etc/nginx/sites-available/default
 
 # Add custom response header
-hdr="server_name _;\n\n\tadd_header X-Served-By $(hostname);\n\n"
+hdr="http {\n\n\tadd_header X-Served-By $(hostname);\n\n"
 
-sudo sed -i "s#server_name _;#$hdr#" /etc/nginx/sites-available/default
+sudo sed -i "s#http {#$hdr#" /etc/nginx/nginx.conf
 
 # Test nginx config files for errors
 sudo nginx -t
