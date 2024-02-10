@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
+# Script that installs haproxy
 
 # Install HAProxy
-
 if command -v haproxy &> /dev/null; then
     echo "HAProxy is already installed in this machine"
 else
