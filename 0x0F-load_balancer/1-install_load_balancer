@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# Install HAProxy
+
+if command -v haproxy &> /dev/null; then
+    echo "HAProxy is already installed in this machine"
+else
+    echo "Installing HAProxy Server"
+    sudo apt-get update
+    sudo apt-get install -y haproxy
+    echo "HAProxy has been installed"
+fi
+
+# Save a copy of the default haproxy file
+cp /etc/default/haproxy /etc/default/haproxy.orig
+
+# Enable HAProxy init script, so HAProxy will start and stop along with server
+echo "ENABLED=1" >> /etc/default/haproxy
+
+# Save a copy of the default haproxy config file
+cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.orig
+
+# Configure HAProxy to send traffic to web-01 and web-02 servers
+conf="\n\nfrontend http_front\n\tbind *:80\n\tstats uri /haproxy?stats\n\tdefault_backend http_back\n\nbackend http_back\n
+\tbalance roundrobin\n\tserver web-1 18.233.62.148:80 check\n\tserver web-2 54.237.80.96:80 check"
+
+printf "%b\n" "$conf" >> /etc/haproxy/haproxy.cfg
+
+# Restart HAProxy
+sudo service haproxy restart
